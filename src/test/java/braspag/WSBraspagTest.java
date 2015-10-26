@@ -51,6 +51,13 @@ public class WSBraspagTest {
         Assert.assertTrue(estornoString != null);
     }
 
+    @Test
+    public void testaPagamentoCartaoDebito() throws Exception {
+        final WSBraspag wsBraspag = new WSBraspag();
+        final String resposta = wsBraspag.vendaCartaoDebito();
+        Assert.assertTrue(resposta != null);
+    }
+
     class RespostaVenda {
         private Payment Payment;
 

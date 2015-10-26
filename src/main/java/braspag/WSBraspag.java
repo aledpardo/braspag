@@ -9,9 +9,12 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class WSBraspag {
 
+    private static final Logger LOG = LogManager.getLogger(WSBraspag.class);
     private static final String MERCHANT_KEY = "HTHOWIIRULMGVTTQLYHUUJHXRUVNOWOBZZUQRHHR";
     private static final String MERCHANT_ID = "0acaf365-ffc7-433c-8bea-6f7bbe9d1649";
     private static final String ENDPOINT_SANDBOX = "https://apisandbox.braspag.com.br/v2/";
@@ -76,7 +79,9 @@ public class WSBraspag {
         requestPost.setEntity(new StringEntity(request.toString()));
 
         try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(requestPost)) {
-            return IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            final String resposta = IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            WSBraspag.LOG.info(resposta);
+            return resposta;
         }
     }
 
@@ -106,7 +111,9 @@ public class WSBraspag {
         requestPost.setEntity(new StringEntity(request.toString().replace("\\", "")));
 
         try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(requestPost)) {
-            return IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            final String resposta = IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            WSBraspag.LOG.info(resposta);
+            return resposta;
         }
     }
 
@@ -128,7 +135,9 @@ public class WSBraspag {
         this.addHeaders(requestPut);
 
         try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(requestPut)) {
-            return IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            final String resposta = IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            WSBraspag.LOG.info(resposta);
+            return resposta;
         }
     }
 
@@ -138,12 +147,44 @@ public class WSBraspag {
         this.addHeaders(requestGet);
 
         try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(requestGet)) {
-            return IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            final String resposta = IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            WSBraspag.LOG.info(resposta);
+            return resposta;
         }
     }
 
     public String vendaCartaoDebito() throws Exception {
-        return null;
+        final StringBuilder request = new StringBuilder();
+
+        request.append("{  ");
+        request.append("   \"MerchantOrderId\":\"2014121201\",");
+        request.append("   \"Customer\":{  ");
+        request.append("      \"Name\":\"Comprador Teste\"     ");
+        request.append("   },");
+        request.append("   \"Payment\":{  ");
+        request.append("     \"Type\":\"DebitCard\",");
+        request.append("     \"Amount\":15700,");
+        request.append("     \"Provider\":\"Cielo\",    ");
+        request.append("     \"ReturnUrl\":\"http://www.braspag.com.br\",");
+        request.append("     \"DebitCard\":{  ");
+        request.append("         \"CardNumber\":\"1234123412341231\",");
+        request.append("         \"Holder\":\"Teste Holder\",");
+        request.append("         \"ExpirationDate\":\"12/2021\",");
+        request.append("         \"SecurityCode\":\"123\",");
+        request.append("         \"Brand\":\"Visa\"");
+        request.append("     }");
+        request.append("   }");
+        request.append("}");
+
+        final HttpPost requestPost = new HttpPost(WSBraspag.ENDPOINT_SANDBOX + "/" + WSBraspag.SERVICO_VENDAS);
+        this.addHeaders(requestPost);
+        requestPost.setEntity(new StringEntity(request.toString()));
+
+        try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(requestPost)) {
+            final String resposta = IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+            WSBraspag.LOG.info(resposta);
+            return resposta;
+        }
     }
 
     private void addHeaders(final HttpRequestBase request) {
