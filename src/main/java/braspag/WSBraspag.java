@@ -108,7 +108,7 @@ public class WSBraspag {
 
         final HttpPost requestPost = new HttpPost(WSBraspag.ENDPOINT_SANDBOX + "/" + WSBraspag.SERVICO_VENDAS);
         this.addHeaders(requestPost);
-        requestPost.setEntity(new StringEntity(request.toString().replace("\\", "")));
+        requestPost.setEntity(new StringEntity(request.toString()));
 
         try (CloseableHttpResponse response = HttpClientBuilder.create().build().execute(requestPost)) {
             final String resposta = IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
