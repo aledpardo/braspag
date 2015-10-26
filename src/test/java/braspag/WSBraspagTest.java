@@ -10,7 +10,7 @@ import main.java.braspag.WSBraspag;
 public class WSBraspagTest {
 
     @Test
-    public void testaVendaComDadosCompleto() throws Exception {
+    public void testaVendaComCartaoDeCredito() throws Exception {
         final String vendaResposta = new WSBraspag().vendaCartaoCredito();
         Assert.assertTrue(vendaResposta != null);
     }
